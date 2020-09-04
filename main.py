@@ -18,6 +18,15 @@ experience = rb.Experience(start_date=dt.datetime(2000, 5, 1),
                           )
 resume.add_experience(experience)
 
+education = rb.Education(start_date=dt.datetime(1998, 5, 1),
+                           end_date=dt.datetime(2000, 7, 1),
+                           title='St. Vincent College',
+                           details=[('Studied Information Technology, '
+                                    'Physchology and Sociaology')]
+                          )
+resume.add_education(education)
+
+
 if len(sys.argv) > 1:
     tag = sys.argv[1]
 else:

@@ -18,5 +18,15 @@
       {% endfor %}
       </ul>
     {% endfor %}
+    <h2>Education</h2>
+    {% for education in education %}
+      <h3>{{education.start_date.strftime('%b %Y')}} -
+        {{education.end_date.strftime('%b %Y')}} {{education.title}}</h3>
+      <ul>
+      {% for detail in education.details %}
+      <li>{{detail}}</li>
+      {% endfor %}
+      </ul>
+    {% endfor %}
   </body>
 </html>

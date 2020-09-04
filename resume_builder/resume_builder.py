@@ -57,6 +57,19 @@ class Experience(Tags):
             super().__init__(kwargs['tags'])
 
 
+class Education(Tags):
+    # Details of education
+
+    def __init__(self, **kwargs):
+        self.start_date = kwargs.get('start_date', None)
+        self.end_date = kwargs.get('end_date', None)
+        self.title = kwargs.get('title', '')
+        self.details = kwargs.get('details', [])
+
+        if 'tags' in kwargs:
+            super().__init__(kwargs['tags'])
+
+
 class Resume():
     """
     Contains resume data and functions
@@ -83,13 +96,17 @@ class Resume():
         )
         template = env.get_template(template)
 
-        # Filter experiences if a specific tag was requested
+        # Filter experiences and education  if a specific tag was requested
         if tag:
-            experiences = filter(lambda e: tag in e.tags, self.experiences)
+            filtered_experiences = filter(lambda e: tag in e.tags, self.experiences)
+            filtered_education = filter(lambda e: tag in e.tags, self.education)
         else:
-            experiences = self.experiences
+            filtered_experiences = self.experiences
+            filtered_education = self.education
 
-        return template.render(basic_details=self.basic_details, experiences=experiences)
+        return template.render(basic_details=self.basic_details,
+                               experiences=filtered_experiences,
+                               education=filtered_education)
 
     def get_html(self, html_template='resume.html', tag=None):
         # Render resume HTML based on a tag if supplied
@@ -107,4 +124,7 @@ class Resume():
 
     def add_experience(self, experience):
         self.experiences.append(experience)
+
+    def add_education(self, education):
+        self.education.append(education)
 
