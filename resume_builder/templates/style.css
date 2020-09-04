@@ -1,3 +1,11 @@
 body {
   font-family: Arial;
 }
+
+h1 {
+  font-size: 3em;
+}
+
+#basic_details {
+  text-align: center;
+}

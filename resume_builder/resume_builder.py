@@ -1,6 +1,7 @@
 from weasyprint import HTML, CSS
 from jinja2 import Environment, PackageLoader, select_autoescape
 import datetime as dt
+import json
 
 class Tags():
     """
@@ -128,3 +129,16 @@ class Resume():
     def add_education(self, education):
         self.education.append(education)
 
+    def _serialize(self, obj):
+        if (isinstance(obj, BasicDetails) or
+            isinstance(obj, Experience) or
+            isinstance(obj, Education)):
+            return obj.__dict__
+
+        if isinstance(obj, dt.date):
+            return obj.strftime('%Y-%m')
+
+        return None
+
+    def get_json(self):
+        return json.dumps(self.__dict__, default=self._serialize)

@@ -8,8 +8,8 @@ resume = rb.Resume(first_name='Phil',
                    email='phil.j.nicholls@gmail.com',
                    address='Nahal meron 527/1 Nili 7193000 Israel',
                    website='http://philjnicholls.com')
-experience = rb.Experience(start_date=dt.datetime(2000, 5, 1),
-                           end_date=dt.datetime(2003, 7, 1),
+experience = rb.Experience(start_date=dt.date(2000, 5, 1),
+                           end_date=dt.date(2003, 7, 1),
                            title='Semantico', tags=['project manager',
                                                     'full-stack developer'],
                            role='Project Manager',
@@ -18,8 +18,8 @@ experience = rb.Experience(start_date=dt.datetime(2000, 5, 1),
                           )
 resume.add_experience(experience)
 
-education = rb.Education(start_date=dt.datetime(1998, 5, 1),
-                           end_date=dt.datetime(2000, 7, 1),
+education = rb.Education(start_date=dt.date(1998, 5, 1),
+                           end_date=dt.date(2000, 7, 1),
                            title='St. Vincent College',
                            details=[('Studied Information Technology, '
                                     'Physchology and Sociaology')]
@@ -34,3 +34,4 @@ else:
 
 print(resume.get_html(tag=tag))
 resume.export_pdf('resume.pdf')
+print(resume.get_json())
