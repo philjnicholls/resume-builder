@@ -13,7 +13,7 @@
                   href="{{basic_details.website}}">{{basic_details.website}}</a></div>
     </div>
     <h2>Work History</h2>
-    {% for experience in experiences %}
+    {% for experience in work_experience %}
       <h3>{{experience.start_date.strftime('%b %Y')}} -
         {{experience.end_date.strftime('%b %Y')}} {{experience.title}}
         {{experience.role}}</h3>

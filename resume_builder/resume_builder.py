@@ -40,7 +40,6 @@ class BasicDetails():
         self.address = kwargs.get('address', '')
         self.website= kwargs.get('website', '')
 
-
 class Experience(Tags):
     """
     Details of experience such as place of work,
@@ -48,28 +47,26 @@ class Experience(Tags):
     """
 
     def __init__(self, **kwargs):
-        self.start_date = kwargs.get('start_date', None)
-        self.end_date = kwargs.get('end_date', None)
-        self.title = kwargs.get('title', '')
-        self.role = kwargs.get('role', '')
-        self.details = kwargs.get('details', [])
-
-        if 'tags' in kwargs:
-            super().__init__(kwargs['tags'])
-
-
-class Education(Tags):
-    # Details of education
-
-    def __init__(self, **kwargs):
-        self.start_date = kwargs.get('start_date', None)
-        self.end_date = kwargs.get('end_date', None)
+        self.start_date = self.__get_date(kwargs.get('start_date', None))
+        self.end_date = self.__get_date(kwargs.get('end_date', None))
         self.title = kwargs.get('title', '')
         self.details = kwargs.get('details', [])
 
         if 'tags' in kwargs:
             super().__init__(kwargs['tags'])
 
+    @staticmethod
+    def __get_date(date):
+        if date is not None:
+            return dt.datetime.strptime(date, '%Y-%m')
+        else:
+            return None
+
+class Education(Experience):
+    pass
+
+class WorkExperience(Experience):
+    pass
 
 class Resume():
     """
@@ -79,7 +76,7 @@ class Resume():
 
     def __init__(self, **kwargs):
         self.basic_details = BasicDetails(**kwargs)
-        self.experiences = []
+        self.work_experience = []
         self.education = []
 
     def __str__(self):
@@ -99,14 +96,15 @@ class Resume():
 
         # Filter experiences and education  if a specific tag was requested
         if tag:
-            filtered_experiences = filter(lambda e: tag in e.tags, self.experiences)
+            filtered_work_experience = filter(lambda e: tag in e.tags,
+                                              self.work_experience)
             filtered_education = filter(lambda e: tag in e.tags, self.education)
         else:
-            filtered_experiences = self.experiences
+            filtered_work_experience = self.work_experience
             filtered_education = self.education
 
         return template.render(basic_details=self.basic_details,
-                               experiences=filtered_experiences,
+                               work_experience=filtered_work_experience,
                                education=filtered_education)
 
     def get_html(self, html_template='resume.html', tag=None):
@@ -123,15 +121,15 @@ class Resume():
         css = CSS(string=self._get_css())
         html.write_pdf(file_path, stylesheets=[css])
 
-    def add_experience(self, experience):
-        self.experiences.append(experience)
+    def add_work_experience(self, work_experience):
+        self.work_experience.append(work_experience)
 
     def add_education(self, education):
         self.education.append(education)
 
     def _serialize(self, obj):
         if (isinstance(obj, BasicDetails) or
-            isinstance(obj, Experience) or
+            isinstance(obj, WorkExperience) or
             isinstance(obj, Education)):
             return obj.__dict__
 
@@ -142,3 +140,14 @@ class Resume():
 
     def get_json(self):
         return json.dumps(self.__dict__, default=self._serialize)
+
+    def load_json(self, json_string):
+        load_dict = json.loads(json_string)
+
+        self.basic_details = BasicDetails(**load_dict['basic_details'])
+
+        for work_experience in load_dict['work_experience']:
+            self.add_work_experience(WorkExperience(**work_experience))
+
+        for education in load_dict['education']:
+            self.add_education(Education(**education))
