@@ -1,8 +1,22 @@
 <html>
   <head>
-    <title>{{first_name}} {{last_name}}</title>
+    <title>{{basic_details.first_name}} {{basic_details.last_name}}</title>
   </head>
   <body>
-    {{first_name}} {{last_name}}
+    <h1>{{basic_details.first_name}} {{basic_details.last_name}}</h1>
+    <div>{{basic_details.address}}</div>
+    <div>Phone: {{basic_details.phone}}</div>
+    <div>Email: {{basic_details.email}}</div>
+    <div>Web: {{basic_details.website}}</div>
+    <h2>Work History</h2>
+    {% for experience in experiences %}
+      <h3>{{experience.start_date.strftime('%b %Y')}} - {{experience.end_date.strftime('%b %Y')}} {{experience.title}}</h3>
+      <div>{{experience.role}}</div>
+      <ul>
+      {% for detail in experience.details %}
+      <li>{{detail}}</li>
+      {% endfor %}
+      </ul>
+    {% endfor %}
   </body>
 </html>
